@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input id="input" type="text" placeholder="enter activity">
+<button onclick="add_activity()">add</button>
+<h3>Activities</h3>
+<div id="activity_list"></div>
+
+<script>
+    let activities = [];
+    const add_activity = () => {
+        let activityInput = document.getElementById("input");
+        let activityText = activityInput.value;
+
+        if (activityText.trim() !== "") {
+            activities.push(activityText);
+            
+            activityInput.value = ""; 
+            
+            display();
+        }
+    }
+
+    function display() {
+        let listContainer = document.getElementById("activity_list");
+
+        listContainer.innerHTML = ""; 
+
+        for (let i = 0; i < activities.length; i++) {
+            listContainer.innerHTML += "<p>" + activities[i] + "</p>";
+        }
+    }
+</script>
+
+    </script>
+</body>
+</html>
