@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .bigbox{
+            width:100%;
+            height:auto;
+
+        }
+        body{
+            background-color: rgb(250, 215, 239);
+        }
+        #rock, #paper, #scissors{
+            background-color: #2dd8de;
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+        }
+        .image{
+            height: 110px;
+            width: 110px;
+            border-radius: 50%;
+        }
+        #box{
+
+            margin: 100px 100px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        button{
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform .2s ease, background-color 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button:hover{
+            transform: scale(1.2);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); 
+        }
+        #card {
+            background-color: white;
+            width: 280px;
+            margin: 40px auto;         
+            padding: 20px 30px;
+            border-radius: 16px;      
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05); 
+            text-align: center;        
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            border: 3px solid #00cbd6; 
+              }
+
+        #result {
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-weight: 700;
+            background-color: aqua;
+                }
+
+            #card h2 {
+                font-size: 14px;
+                text-transform: uppercase;   
+                letter-spacing: 2px;       
+                color: #7f8c8d;
+                margin: 0 0 8px 0;
+            }
+
+            #score {
+                font-size: 36px;          
+                margin: 0;
+                color: #2c3e50;
+                background-color: bisque;
+                font-weight: 800;
+            }
+
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="bigbox">
+    
+    <h1 style="text-align: center;">Rock paper scissors</h1>
+   <div id="box">
+    <button id="rock" onclick="play('rock')"><img class="image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVqji5vntssYSoZIfWS8i2U1Bj3-ScMzSIbg&s"></button>
+    <button id="scissors" onclick="play('scissors')"><img class="image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpYhbV21eR3y_QSPOBpzFYBAg_xmrJ0BZ3dVrHi9rAdQ&s=10"></button>
+    <button id="paper" onclick="play('paper')"><img class="image" src="https://thumb.silhouette-ac.com/t/26/2654adfd65b6ca4a8ac25a9f727d2262_t.jpeg"></button>
+    </div>
+    <div id="card">
+    <div id="result">Click any button to start!</div>
+    <h2>Score</h2>
+    <div id="score">0 : 0</div>
+    </div>
+    </div>
+
+
+    <script>
+        let player_wins = 0
+        let computer_wins = 0
+    function play(user){
+    const choices = ["rock","paper","scissors"]
+    const comp = choices[Math.floor(Math.random()*3)]
+   
+    if(user === comp){
+        document.getElementById("result").innerHTML = "Draw"
+
+    }else if(
+        (user === "rock" && comp === "scissors") ||
+        (user === "paper" && comp === "rock") ||
+        (user === "scissors" && comp === "paper")
+    ){
+        player_wins++
+        document.getElementById("result").innerHTML = "You win! Computer's coice : " + comp
+        document.getElementById("score").innerHTML =  `${player_wins} : ${computer_wins}`
+    }else{
+        computer_wins++;
+
+        document.getElementById("result").innerHTML = "You lose! Computer's coice : " + comp
+        document.getElementById("score").innerHTML =  `${player_wins} : ${computer_wins}`
+    }
+    
+}
+    </script>
+
+</body>
+</html>
