@@ -1,0 +1,617 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>API Showcase</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: white;
+      padding: 35px;
+      background: linear-gradient(135deg, orange,skyblue, lightpink);
+      animation: bgMove 12s ease infinite;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 40px;
+      margin-bottom: 30px;
+      background: linear-gradient(90deg, #facc15, #fb923c, #f97316);
+      /* Standard property for compatibility */
+      -webkit-background-clip: text;
+      background-clip: text;
+      /* Make text transparent so the gradient shows through */
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+    }
+
+    .switch-box {
+      width: 390px;
+      margin: 0 auto 40px;
+      padding: 8px;
+      border-radius: 50px;
+      display: flex;
+      gap: 8px;
+      background: linear-gradient(135deg, #1e293b, #334155);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+    }
+
+    .switch-box button {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 700;
+      color: white;
+      background: transparent;
+      transition: 0.3s;
+    }
+
+    .switch-box button.active {
+      color: #111827;
+      background: linear-gradient(135deg, #facc15, #fb923c);
+      box-shadow: 0 8px 20px rgba(250,204,21,0.4);
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 28px;
+    }
+
+    .card {
+      padding: 18px;
+      border-radius: 22px;
+      cursor: pointer;
+      background: linear-gradient(145deg, #E50914, #B20710,#000000,#FFFFFF);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.45);
+      transition: 0.35s;
+      border: 1px solid rgba(255,255,255,0.08);
+      animation: bgMove 12s ease infinite;
+    }
+
+    .card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(250,204,21,0.25);
+    }
+
+    .card img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      border-radius: 18px;
+      margin-bottom: 15px;
+      background: linear-gradient(135deg, #334155, #111827);
+    }
+
+    .card h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
+      color: #fa1515;
+    }
+
+    .card p {
+      color: #cbd5e1;
+      margin: 7px 0;
+      font-size: 15px;
+    }
+
+    .loader {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-size: 24px;
+      margin-top: 40px;
+      color: #facc15;
+    }
+     @keyframes bgMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @media (max-width: 500px) {
+      body {
+        padding: 20px;
+      }
+
+      .title {
+        font-size: 30px;
+      }
+
+      .switch-box {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1 class="title">API Showcase Dashboard</h1>
+
+  <div class="switch-box">
+    <button id="productBtn">Products API</button>
+<button id="characterBtn" class="active">Characters API</button>
+  </div>
+
+  <div id="result" class="container"></div>
+
+ <script>
+  const result = document.getElementById("result");
+  const productBtn = document.getElementById("productBtn");
+  const characterBtn = document.getElementById("characterBtn");
+
+  const BACKEND_API = "http://localhost:3004/api/v1/get/products";
+  const CHARACTER_API = "https://dattebayo-api.onrender.com/characters";
+
+  productBtn.addEventListener("click", showProducts);
+  characterBtn.addEventListener("click", showCharacters);
+
+  function setActiveButton(button) {
+    productBtn.classList.remove("active");
+    characterBtn.classList.remove("active");
+    button.classList.add("active");
+  }
+
+  function openCharacter(id) {
+    window.location.href = `character.html?id=${id}`;
+  }
+
+  function fallbackImage(name) {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || "Naruto")}&background=E50914&color=fff&size=400`;
+  }
+
+  async function showProducts() {
+    setActiveButton(productBtn);
+    result.innerHTML = `<div class="loader">Loading products...</div>`;
+
+    try {
+      const response = await fetch(BACKEND_API);
+      const products = await response.json();
+
+      result.innerHTML = "";
+
+      products.forEach((product) => {
+        const imagePath = product.image
+          ? `http://localhost:3004/${product.image}`
+          : fallbackImage(product.name);
+
+        result.innerHTML += `
+          <div class="card">
+            <img src="${imagePath}" onerror="this.src='${fallbackImage(product.name)}'">
+            <h2>${product.name || "No Name"}</h2>
+            <p><b>Price:</b> ₹${product.price || "N/A"}</p>
+            <p><b>Description:</b> ${product.description || "No description"}</p>
+          </div>
+        `;
+      });
+
+    } catch (error) {
+      result.innerHTML = `<div class="loader">Backend API not working. Start Node server first.</div>`;
+    }
+  }
+
+  async function showCharacters() {
+    setActiveButton(characterBtn);
+    result.innerHTML = `<div class="loader">Loading characters...</div>`;
+
+    try {
+      const response = await fetch(CHARACTER_API);
+      const data = await response.json();
+
+      result.innerHTML = "";
+
+      data.characters.forEach((char) => {
+        const image = fallbackImage(char.name);
+
+        result.innerHTML += `
+          <div class="card" onclick="openCharacter(${char.id})">
+            <img src="${image}">
+            <h2>${char.name || "Unknown"}</h2>
+            <p><b>Clan:</b> ${char.personal?.clan || "Unknown"}</p>
+            <p><b>Sex:</b> ${char.personal?.sex || "Unknown"}</p>
+            <p>Click to view more info</p>
+          </div>
+        `;
+      });
+
+    } catch (error) {
+      result.innerHTML = `<div class="loader">Characters API not working.</div>`;
+    }
+  }
+
+  showCharacters();
+</script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>API Showcase</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 35px;
+      color: white;
+      background: linear-gradient(135deg, #141414, #b20710, #e50914, #000000);
+      background-size: 300% 300%;
+      animation: bgMove 12s ease infinite;
+    }
+
+    @keyframes bgMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .title {
+      text-align: center;
+      font-size: 42px;
+      margin-bottom: 35px;
+      font-weight: 900;
+      color: white;
+      text-shadow: 0 0 20px rgba(229, 9, 20, 0.9);
+    }
+
+    .switch-box {
+      width: 400px;
+      margin: 0 auto 40px;
+      padding: 8px;
+      border-radius: 50px;
+      display: flex;
+      gap: 8px;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(15px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    .switch-box button {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 800;
+      color: white;
+      background: transparent;
+      transition: 0.3s;
+    }
+
+    .switch-box button.active {
+      background: linear-gradient(135deg, #e50914, #ff6b00);
+      color: white;
+      box-shadow: 0 8px 25px rgba(229,9,20,.55);
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 28px;
+    }
+
+    .card {
+      padding: 18px;
+      border-radius: 22px;
+      cursor: pointer;
+      background: linear-gradient(
+        135deg,
+        rgba(229,9,20,.20),
+        rgba(178,7,16,.16),
+        rgba(0,0,0,.38)
+      );
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 10px 32px rgba(0,0,0,.35);
+      transition: .35s;
+    }
+
+    .card:hover {
+      transform: translateY(-10px) scale(1.02);
+      background: linear-gradient(
+        135deg,
+        rgba(229,9,20,.32),
+        rgba(255,107,0,.22),
+        rgba(0,0,0,.42)
+      );
+      box-shadow:
+        0 20px 40px rgba(0,0,0,.45),
+        0 0 25px rgba(229,9,20,.45);
+    }
+
+    .card img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      border-radius: 18px;
+      margin-bottom: 15px;
+      background: #111;
+    }
+
+    .card h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+
+    .card p {
+      color: #f1f1f1;
+      margin: 7px 0;
+      font-size: 15px;
+    }
+
+    .loader {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-size: 24px;
+      margin-top: 40px;
+      color: white;
+      font-weight: bold;
+    }
+
+    @media (max-width: 500px) {
+      body {
+        padding: 20px;
+      }
+
+      .title {
+        font-size: 30px;
+      }
+
+      .switch-box {
+        width: 100%;
+      }
+    }
+    .hero{
+    position:relative;
+    text-align:center;
+    margin-bottom:50px;
+    overflow:hidden;
+}
+
+.hero-glow{
+    position:absolute;
+    width:350px;
+    height:350px;
+    background:radial-gradient(
+        circle,
+        rgba(255,136,0,.55),
+        transparent 70%
+    );
+
+    top:-150px;
+    left:50%;
+    transform:translateX(-50%);
+    filter:blur(60px);
+    z-index:-1;
+}
+
+.hero-title{
+    font-size:85px;
+    font-weight:900;
+    letter-spacing:8px;
+    text-transform:uppercase;
+
+    background:linear-gradient(
+        90deg,
+        #ffffff,
+        #ffcc00,
+        #ff6600,
+        #ff0000
+    );
+
+    background-size:300% 300%;
+
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+
+    animation:shine 6s linear infinite;
+}
+
+.hero-subtitle{
+    font-size:18px;
+    color:white;
+    margin-top:10px;
+    opacity:.9;
+    letter-spacing:1px;
+}
+
+.hero-badges{
+    margin-top:25px;
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.hero-badges span{
+    padding:12px 20px;
+    border-radius:30px;
+
+    background:rgba(255,255,255,.12);
+    backdrop-filter:blur(12px);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    color:white;
+    font-weight:600;
+
+    transition:.3s;
+}
+
+.hero-badges span:hover{
+    transform:translateY(-5px);
+    background:rgba(255,255,255,.2);
+}
+
+@keyframes shine{
+    0%{
+        background-position:0% 50%;
+    }
+    100%{
+        background-position:300% 50%;
+    }
+}
+  </style>
+</head>
+
+<body>
+
+  <div class="hero">
+    <div class="hero-glow"></div>
+
+    <h1 class="hero-title">
+        API SHOWCASE
+    </h1>
+
+    <p class="hero-subtitle">
+        Explore Naruto Characters • Custom Product APIs • Interactive Dashboard
+    </p>
+
+    <div class="hero-badges">
+        <span>⚡ Anime API</span>
+        <span>🔥 Naruto Universe</span>
+        <span>🚀 FRONTEND</span>
+    </div>
+</div>
+
+  <div class="switch-box">
+    <button id="productBtn">Products API</button>
+    <button id="characterBtn" class="active">Characters API</button>
+  </div>
+
+  <div id="result" class="container"></div>
+
+  <script>
+    const result = document.getElementById("result");
+    const productBtn = document.getElementById("productBtn");
+    const characterBtn = document.getElementById("characterBtn");
+
+    const BACKEND_API = "http://localhost:3004/api/v1/get/products";
+    const BACKEND_BASE = "http://localhost:3004/";
+    const CHARACTER_API = "https://dattebayo-api.onrender.com/characters";
+    const FALLBACK_IMAGE = "https://placehold.co/300x400/141414/E50914?text=No+Image";
+
+    productBtn.addEventListener("click", showProducts);
+    characterBtn.addEventListener("click", showCharacters);
+
+    function setActiveButton(button) {
+      productBtn.classList.remove("active");
+      characterBtn.classList.remove("active");
+      button.classList.add("active");
+    }
+
+    function openCharacter(id) {
+      window.location.href = `character.html?id=${id}`;
+    }
+
+    async function showProducts() {
+      setActiveButton(productBtn);
+      result.innerHTML = `<div class="loader">Loading products...</div>`;
+
+      try {
+        const response = await fetch(BACKEND_API);
+
+        if (!response.ok) {
+          throw new Error("Products API failed");
+        }
+
+        const products = await response.json();
+        result.innerHTML = "";
+
+        products.forEach((product) => {
+          const imagePath = product.image
+            ? `${BACKEND_BASE}${product.image}`
+            : FALLBACK_IMAGE;
+
+          result.innerHTML += `
+            <div class="card">
+              <img 
+                src="${imagePath}" 
+                onerror="this.src='${FALLBACK_IMAGE}'"
+              >
+              <h2>${product.name || "No Name"}</h2>
+              <p><b>Price:</b> ₹${product.price || "N/A"}</p>
+              <p><b>Description:</b> ${product.description || "No description"}</p>
+            </div>
+          `;
+        });
+
+      } catch (error) {
+        result.innerHTML = `
+          <div class="loader">
+            Backend API not working. Check server and CORS.
+          </div>
+        `;
+        console.log(error);
+      }
+    }
+
+    async function showCharacters() {
+      setActiveButton(characterBtn);
+      result.innerHTML = `<div class="loader">Loading characters...</div>`;
+
+      try {
+        const response = await fetch(CHARACTER_API);
+
+        if (!response.ok) {
+          throw new Error("Characters API failed");
+        }
+
+        const data = await response.json();
+        result.innerHTML = "";
+
+        data.characters.forEach((char) => {
+          const image = char.images && char.images.length > 0
+            ? char.images[0]
+            : FALLBACK_IMAGE;
+
+          result.innerHTML += `
+            <div class="card" onclick="openCharacter(${char.id})">
+              <img 
+                src="${image}" 
+                onerror="this.src='${FALLBACK_IMAGE}'"
+              >
+              <h2>${char.name || "Unknown"}</h2>
+              <p><b>Clan:</b> ${char.personal?.clan || "Unknown"}</p>
+              <p><b>Sex:</b> ${char.personal?.sex || "Unknown"}</p>
+              <p>Click to view more info</p>
+            </div>
+          `;
+        });
+
+      } catch (error) {
+        result.innerHTML = `<div class="loader">Characters API not working.</div>`;
+        console.log(error);
+      }
+    }
+
+    showCharacters();
+  </script>
+
+</body>
+</html>
