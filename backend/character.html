@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Character Details</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 35px;
+      color: white;
+      background: linear-gradient(135deg, #141414, #b20710, #e50914, #000000);
+      background-size: 300% 300%;
+      animation: bgMove 12s ease infinite;
+    }
+
+    @keyframes bgMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .hero {
+      position: relative;
+      text-align: center;
+      margin-bottom: 40px;
+      overflow: hidden;
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(255,136,0,.55), transparent 70%);
+      top: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      filter: blur(60px);
+      z-index: -1;
+    }
+
+    .hero-title {
+      font-size: 75px;
+      font-weight: 900;
+      letter-spacing: 8px;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, #ffffff, #ffcc00, #ff6600, #ff0000);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shine 6s linear infinite;
+    }
+
+    .hero-subtitle {
+      font-size: 18px;
+      color: white;
+      margin-top: 10px;
+      opacity: .9;
+      letter-spacing: 1px;
+    }
+
+    .hero-badges {
+      margin-top: 25px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .hero-badges span {
+      padding: 12px 20px;
+      border-radius: 30px;
+      background: rgba(255,255,255,.12);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,.15);
+      color: white;
+      font-weight: 600;
+      transition: .3s;
+    }
+
+    .hero-badges span:hover {
+      transform: translateY(-5px);
+      background: rgba(255,255,255,.2);
+    }
+
+    @keyframes shine {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 300% 50%; }
+    }
+
+    .back {
+      padding: 13px 28px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 900;
+      color: white;
+      background: linear-gradient(135deg, #e50914, #ff6b00);
+      box-shadow: 0 10px 25px rgba(229,9,20,0.45);
+      margin-bottom: 30px;
+    }
+
+    .box {
+      max-width: 1200px;
+      margin: auto;
+      padding: 35px;
+      border-radius: 30px;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.25);
+      box-shadow: 0 20px 40px rgba(0,0,0,.25);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 42px;
+      margin-bottom: 30px;
+      font-weight: 900;
+      background: linear-gradient(90deg, #fff, #ffe082, #ffeb3b, #fff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .images {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-bottom: 35px;
+    }
+
+    .images img {
+      width: 250px;
+      height: 310px;
+      object-fit: cover;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #ff9800, #e91e63, #3f51b5);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+      transition: 0.35s;
+    }
+
+    .images img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+    }
+
+    .info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .info p {
+      padding: 15px;
+      border-radius: 16px;
+      font-size: 16px;
+      line-height: 1.5;
+      color: white;
+      background: linear-gradient(
+        135deg,
+        rgba(255,255,255,.18),
+        rgba(255,255,255,.08)
+      );
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+    }
+
+    b {
+      color: #f9af04;
+    }
+
+    .loader {
+      text-align: center;
+      color: #fff176;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 500px) {
+      body {
+        padding: 20px;
+      }
+
+      .hero-title {
+        font-size: 42px;
+        letter-spacing: 3px;
+      }
+
+      .box {
+        padding: 22px;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+
+      .images img {
+        width: 100%;
+        height: 330px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="hero">
+    <div class="hero-glow"></div>
+
+    <h1 class="hero-title">CHARACTER PROFILE</h1>
+
+    <p class="hero-subtitle">
+      Deep Naruto Character Information • Jutsu • Clan • Ninja Details
+    </p>
+
+    <div class="hero-badges">
+      <span>🥷 Shinobi Data</span>
+      <span>🔥 Naruto Universe</span>
+      <span>⚡ Dattebayo API</span>
+    </div>
+  </div>
+
+  <button class="back" onclick="window.location.href='index.html'">← Back</button>
+
+  <div class="box" id="details">
+    <div class="loader">Loading character details...</div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const characterId = params.get("id");
+    const details = document.getElementById("details");
+
+    function displayValue(value) {
+      if (Array.isArray(value)) {
+        return value.join(", ");
+      }
+
+      return value || "Unknown";
+    }
+
+    function fallbackImage(name) {
+      return `https://placehold.co/400x500/E50914/FFFFFF?text=${encodeURIComponent(name || "No Image")}`;
+    }
+
+    async function getCharacterDetails() {
+      if (!characterId) {
+        details.innerHTML = `
+          <div class="loader">
+            No character selected. Go back and click a character card.
+          </div>
+        `;
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `https://dattebayo-api.onrender.com/characters/${characterId}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Character not found");
+        }
+
+        const char = await response.json();
+
+        const image =
+          char.images && char.images.length > 0
+            ? char.images[0]
+            : fallbackImage(char.name);
+
+        details.innerHTML = `
+          <h1>${char.name || "Unknown Character"}</h1>
+
+          <div class="images">
+            <img
+              src="${image}"
+              onerror="this.onerror=null; this.src='${fallbackImage(char.name)}';"
+            >
+          </div>
+
+          <div class="info">
+            <p><b>ID:</b> ${displayValue(char.id)}</p>
+            <p><b>Name:</b> ${displayValue(char.name)}</p>
+            <p><b>Clan:</b> ${displayValue(char.personal?.clan)}</p>
+            <p><b>Sex:</b> ${displayValue(char.personal?.sex)}</p>
+            <p><b>Status:</b> ${displayValue(char.personal?.status)}</p>
+            <p><b>Birthdate:</b> ${displayValue(char.personal?.birthdate)}</p>
+            <p><b>Blood Type:</b> ${displayValue(char.personal?.bloodType)}</p>
+            <p><b>Occupation:</b> ${displayValue(char.personal?.occupation)}</p>
+            <p><b>Affiliation:</b> ${displayValue(char.personal?.affiliation)}</p>
+            <p><b>Team:</b> ${displayValue(char.personal?.team)}</p>
+            <p><b>Jutsu:</b> ${displayValue(char.jutsu)}</p>
+            <p><b>Nature Type:</b> ${displayValue(char.natureType)}</p>
+            <p><b>Tools:</b> ${displayValue(char.tools)}</p>
+          </div>
+        `;
+
+      } catch (error) {
+        details.innerHTML = `<div class="loader">Character details not found.</div>`;
+        console.log(error);
+      }
+    }
+
+    getCharacterDetails();
+  </script>
+
+</body>
+</html>
